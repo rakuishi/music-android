@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.rakuishi.music.presentation.main.MainFragment
+import com.rakuishi.music.presentation.album.AlbumListFragment
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+        setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
             if (hasReadPermission()) {
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun replaceFragment() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, MainFragment.newInstance())
+            .replace(R.id.container, AlbumListFragment.newInstance())
             .commitNow()
     }
 

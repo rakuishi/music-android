@@ -7,4 +7,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ShapeAppearanceOverlayArtwork">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/artwork_radius</item>
+    </style>
+
 </resources>
