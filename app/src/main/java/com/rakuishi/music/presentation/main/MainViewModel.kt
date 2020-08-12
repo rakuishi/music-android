@@ -12,6 +12,6 @@ class MainViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     fun retrieveMusic() {
-        musicRepository.retrieveMusic()
+        musicRepository.retrieveAlbums()
     }
 }
