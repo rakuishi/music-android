@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.rakuishi.music.data.Album
 import com.rakuishi.music.data.MusicRepository
+import com.rakuishi.music.data.Song
 
 class AlbumListViewModel @ViewModelInject constructor(
     private val musicRepository: MusicRepository,
@@ -14,5 +15,9 @@ class AlbumListViewModel @ViewModelInject constructor(
 
     fun retrieveAlbums(): List<Album> {
         return musicRepository.retrieveAlbums()
+    }
+
+    fun retrieveSongs(albumId: Long): List<Song> {
+        return musicRepository.retrieveSongs(albumId)
     }
 }

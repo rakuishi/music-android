@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.rakuishi.music.MainActivity
 import com.rakuishi.music.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_album_list.*
-import timber.log.Timber
 
 @AndroidEntryPoint
 class AlbumListFragment : Fragment() {
@@ -31,8 +31,16 @@ class AlbumListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter.onClick = { album -> Timber.d(album.toString()) }
-        adapter.onLongClick = { album -> Timber.d(album.toString()) }
+        adapter.onClick = { album ->
+            if (requireActivity() is MainActivity) {
+                (requireActivity() as MainActivity).play(viewModel.retrieveSongs(album.id))
+            }
+        }
+        adapter.onLongClick = { album ->
+            if (requireActivity() is MainActivity) {
+                (requireActivity() as MainActivity).play(viewModel.retrieveSongs(album.id))
+            }
+        }
         adapter.submitList(viewModel.retrieveAlbums())
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter

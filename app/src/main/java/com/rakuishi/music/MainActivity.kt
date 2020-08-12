@@ -6,9 +6,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.rakuishi.music.data.MusicPlayer
+import com.rakuishi.music.data.Song
 import com.rakuishi.music.presentation.album.AlbumListFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -17,15 +21,24 @@ class MainActivity : AppCompatActivity() {
         const val PERMISSION_REQUEST_CODE = 1000
     }
 
+    @Inject
+    lateinit var musicPlayer: MusicPlayer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        bindView()
 
         if (savedInstanceState == null) {
             if (hasReadPermission()) {
                 replaceFragment()
             } else {
                 requestPermission()
+            }
+        } else {
+            if (musicPlayer.isPlaying()) {
+                musicPlayerView.resume()
             }
         }
     }
@@ -34,6 +47,21 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, AlbumListFragment.newInstance())
             .commitNow()
+    }
+
+    private fun bindView() {
+        musicPlayerView.apply {
+            onSkipPrev = { musicPlayer.skipPrev() }
+            onResume = { musicPlayer.resume() }
+            onPause = { musicPlayer.pause() }
+            onSkipNext = { musicPlayer.skipNext() }
+        }
+    }
+
+    fun play(songs: List<Song>) {
+        musicPlayer.setDataSource(songs)
+        musicPlayer.start()
+        musicPlayerView.resume()
     }
 
     // region Permission
