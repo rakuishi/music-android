@@ -13,6 +13,8 @@
         android:id="@+id/musicPlayerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/background_music_player"
+        android:elevation="16dp" />
 
 </RelativeLayout>
