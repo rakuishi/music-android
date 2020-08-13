@@ -14,8 +14,8 @@ class MusicPlayerView @JvmOverloads constructor(
     defStyle: Int = 0
 ) : RelativeLayout(context, attrs, defStyle) {
 
-    var onSkipPrev: (() -> Unit)? = null
-    var onSkipNext: (() -> Unit)? = null
+    var onPrevious: (() -> Unit)? = null
+    var onNext: (() -> Unit)? = null
     var onPause: (() -> Unit)? = null
     var onResume: (() -> Unit)? = null
 
@@ -29,7 +29,7 @@ class MusicPlayerView @JvmOverloads constructor(
         skipNextImageView.isEnabled = false
 
         skipPrevImageView.setOnClickListener {
-            onSkipPrev?.invoke()
+            onPrevious?.invoke()
         }
 
         playImageView.setOnClickListener {
@@ -43,7 +43,7 @@ class MusicPlayerView @JvmOverloads constructor(
         }
 
         skipNextImageView.setOnClickListener {
-            onSkipNext?.invoke()
+            onNext?.invoke()
         }
     }
 

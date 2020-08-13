@@ -51,16 +51,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun bindView() {
         musicPlayerView.apply {
-            onSkipPrev = { musicPlayer.skipPrev() }
+            onPrevious = { musicPlayer.previous() }
             onResume = { musicPlayer.resume() }
             onPause = { musicPlayer.pause() }
-            onSkipNext = { musicPlayer.skipNext() }
+            onNext = { musicPlayer.next() }
         }
     }
 
     fun play(songs: List<Song>) {
-        musicPlayer.setDataSource(songs)
-        musicPlayer.start()
+        musicPlayer.start(songs)
         musicPlayerView.resume()
     }
 

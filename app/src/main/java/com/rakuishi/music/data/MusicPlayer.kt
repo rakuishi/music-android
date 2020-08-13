@@ -1,109 +1,78 @@
 package com.rakuishi.music.data
 
 import android.content.Context
-import android.media.MediaPlayer
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.source.TrackGroupArray
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.Util
+import timber.log.Timber
 
-class MusicPlayer(private val context: Context) {
+class MusicPlayer(private val context: Context) : Player.EventListener {
 
-    private var currentMediaPlayer: MediaPlayer
-    private var nextMediaPlayer: MediaPlayer
     private var songs: List<Song> = arrayListOf()
-    private var currentIndex: Int = 0
-    private var isSingleLooping: Boolean = false
+    private var exoPlayer: ExoPlayer = SimpleExoPlayer.Builder(context).build()
+
+    private val dataSourceFactory: DefaultDataSourceFactory by lazy {
+        DefaultDataSourceFactory(
+            context,
+            Util.getUserAgent(context, "com.rakuishi.music"),
+            null
+        )
+    }
 
     init {
-        currentMediaPlayer = MediaPlayer().apply {
-            setOnCompletionListener { skipNext() }
-        }
-
-        nextMediaPlayer = MediaPlayer().apply {
-            setOnCompletionListener { skipNext() }
-        }
+        exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
+        exoPlayer.addListener(this)
     }
 
-    fun setDataSource(songs: List<Song>) {
+    fun start(songs: List<Song>) {
         this.songs = songs
+
+        val mediaSources = ConcatenatingMediaSource()
+        for (song in songs) {
+            val mediaSource =
+                ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(song.contentUri)
+            mediaSources.addMediaSource(mediaSource)
+        }
+        exoPlayer.prepare(mediaSources)
+
+        exoPlayer.playWhenReady = true
     }
 
-    fun start(index: Int = 0, forceStart: Boolean = true) {
-        this.currentIndex = index
-
-        currentMediaPlayer.apply {
-            reset()
-            isLooping = isSingleLooping
-            setDataSource(context, songs[currentIndex].contentUri)
-            prepare()
-        }
-
-        prepareNextMediaPlayer()
-        if (forceStart)
-            currentMediaPlayer.start()
+    fun previous() {
+        exoPlayer.previous()
     }
 
-    fun skipPrev() {
-        val ratio =
-            currentMediaPlayer.currentPosition.toFloat() / currentMediaPlayer.duration.toFloat()
-        val justSeekToZero = ratio < 0.1
-
-        if (isSingleLooping || justSeekToZero) {
-            currentMediaPlayer.seekTo(0)
-        } else {
-            val isPlaying = currentMediaPlayer.isPlaying
-            currentMediaPlayer.stop()
-
-            val prevIndex = if (currentIndex == 0) songs.size - 1 else currentIndex - 1
-            start(prevIndex, isPlaying)
-        }
-    }
-
-    fun skipNext() {
-        if (isSingleLooping) {
-            currentMediaPlayer.seekTo(0)
-        } else {
-            val isPlaying = currentMediaPlayer.isPlaying
-            currentMediaPlayer.stop()
-
-            val temp = nextMediaPlayer
-            nextMediaPlayer = currentMediaPlayer
-            currentMediaPlayer = temp
-
-            currentIndex = if (currentIndex == songs.size - 1) 0 else currentIndex + 1
-            prepareNextMediaPlayer()
-
-            if (isPlaying)
-                currentMediaPlayer.start()
-        }
+    fun next() {
+        exoPlayer.next()
     }
 
     fun resume() {
-        currentMediaPlayer.start()
+        exoPlayer.playWhenReady = true
     }
 
     fun pause() {
-        currentMediaPlayer.pause()
+        exoPlayer.playWhenReady = false
     }
 
     fun destroy() {
-        currentMediaPlayer.release()
-        nextMediaPlayer.release()
+        exoPlayer.release()
     }
 
     fun isPlaying(): Boolean {
-        return currentMediaPlayer.isPlaying
+        return exoPlayer.isPlaying
     }
 
-    private fun prepareNextMediaPlayer() {
-        nextMediaPlayer.apply {
-            val nextSong =
-                if (currentIndex == songs.size - 1) songs[0] // first song
-                else songs[currentIndex + 1] // next song
-
-            reset()
-            isLooping = isSingleLooping
-            setDataSource(context, nextSong.contentUri)
-            prepare()
-        }
-
-        currentMediaPlayer.setNextMediaPlayer(nextMediaPlayer)
+    override fun onTracksChanged(
+        trackGroups: TrackGroupArray,
+        trackSelections: TrackSelectionArray
+    ) {
+        super.onTracksChanged(trackGroups, trackSelections)
+        Timber.d("onTracksChanged: %s", songs[exoPlayer.currentWindowIndex].toString())
     }
 }
