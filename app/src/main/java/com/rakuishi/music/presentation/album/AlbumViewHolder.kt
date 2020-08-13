@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.rakuishi.music.R
-import com.rakuishi.music.data.Album
+import com.rakuishi.music.model.Album
 import kotlinx.android.synthetic.main.list_item_album.view.*
 
 

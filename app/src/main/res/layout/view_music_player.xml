@@ -19,7 +19,7 @@
             android:layout_weight="1" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/skipPrevImageView"
+            android:id="@+id/skipToPrevImageView"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -51,7 +51,7 @@
             android:layout_weight="1" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/skipNextImageView"
+            android:id="@+id/skipToNextImageView"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"

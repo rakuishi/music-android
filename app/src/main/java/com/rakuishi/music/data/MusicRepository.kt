@@ -4,6 +4,8 @@ import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.provider.MediaStore
+import com.rakuishi.music.model.Album
+import com.rakuishi.music.model.Song
 import timber.log.Timber
 
 class MusicRepository(private val context: Context) {

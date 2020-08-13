@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.rakuishi.music.MainActivity
+import com.rakuishi.music.presentation.MainActivity
 import com.rakuishi.music.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_album_list.*
@@ -33,12 +33,12 @@ class AlbumListFragment : Fragment() {
 
         adapter.onClick = { album ->
             if (requireActivity() is MainActivity) {
-                (requireActivity() as MainActivity).play(viewModel.retrieveSongs(album.id))
+                (requireActivity() as MainActivity).play(album.id)
             }
         }
         adapter.onLongClick = { album ->
             if (requireActivity() is MainActivity) {
-                (requireActivity() as MainActivity).play(viewModel.retrieveSongs(album.id))
+                (requireActivity() as MainActivity).play(album.id)
             }
         }
         adapter.submitList(viewModel.retrieveAlbums())

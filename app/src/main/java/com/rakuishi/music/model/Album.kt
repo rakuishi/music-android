@@ -1,4 +1,4 @@
-package com.rakuishi.music.data
+package com.rakuishi.music.model
 
 import android.content.ContentUris
 import android.net.Uri

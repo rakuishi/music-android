@@ -59,4 +59,5 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     implementation 'com.google.android.exoplayer:exoplayer-core:2.11.7'
+    implementation "androidx.media:media:1.1.0"
 }

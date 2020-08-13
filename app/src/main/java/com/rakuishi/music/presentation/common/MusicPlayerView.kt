@@ -14,22 +14,22 @@ class MusicPlayerView @JvmOverloads constructor(
     defStyle: Int = 0
 ) : RelativeLayout(context, attrs, defStyle) {
 
-    var onPrevious: (() -> Unit)? = null
-    var onNext: (() -> Unit)? = null
+    var onSkipToPrevious: (() -> Unit)? = null
+    var onSkipToNext: (() -> Unit)? = null
     var onPause: (() -> Unit)? = null
-    var onResume: (() -> Unit)? = null
+    var onPlay: (() -> Unit)? = null
 
     private var isPlaying: Boolean = false
 
     init {
         View.inflate(context, R.layout.view_music_player, this)
 
-        skipPrevImageView.isEnabled = false
+        skipToPrevImageView.isEnabled = false
         playImageView.isEnabled = false
-        skipNextImageView.isEnabled = false
+        skipToNextImageView.isEnabled = false
 
-        skipPrevImageView.setOnClickListener {
-            onPrevious?.invoke()
+        skipToPrevImageView.setOnClickListener {
+            onSkipToPrevious?.invoke()
         }
 
         playImageView.setOnClickListener {
@@ -37,27 +37,27 @@ class MusicPlayerView @JvmOverloads constructor(
                 pause()
                 onPause?.invoke()
             } else {
-                resume()
-                onResume?.invoke()
+                play()
+                onPlay?.invoke()
             }
         }
 
-        skipNextImageView.setOnClickListener {
-            onNext?.invoke()
+        skipToNextImageView.setOnClickListener {
+            onSkipToNext?.invoke()
         }
     }
 
-    fun resume() {
+    fun play() {
         isPlaying = true
         playImageView.setImageResource(R.drawable.ic_round_pause_24)
 
-        skipPrevImageView.setColorFilter(ContextCompat.getColor(context, R.color.colorForeground))
+        skipToPrevImageView.setColorFilter(ContextCompat.getColor(context, R.color.colorForeground))
         playImageView.setColorFilter(ContextCompat.getColor(context, R.color.colorForeground))
-        skipNextImageView.setColorFilter(ContextCompat.getColor(context, R.color.colorForeground))
+        skipToNextImageView.setColorFilter(ContextCompat.getColor(context, R.color.colorForeground))
 
-        skipPrevImageView.isEnabled = true
+        skipToPrevImageView.isEnabled = true
         playImageView.isEnabled = true
-        skipNextImageView.isEnabled = true
+        skipToNextImageView.isEnabled = true
     }
 
     fun pause() {

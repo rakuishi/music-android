@@ -1,6 +1,8 @@
-package com.rakuishi.music.data
+package com.rakuishi.music.presentation.music
 
 import android.content.Context
+import android.net.Uri
+import android.support.v4.media.MediaMetadataCompat
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -14,13 +16,21 @@ import timber.log.Timber
 
 class MusicPlayer(private val context: Context) : Player.EventListener {
 
-    private var songs: List<Song> = arrayListOf()
+    interface Callback {
+        fun onMetadataChanged(metadata: MediaMetadataCompat)
+    }
+
+    private var metadataList: List<MediaMetadataCompat> = arrayListOf()
     private var exoPlayer: ExoPlayer = SimpleExoPlayer.Builder(context).build()
+
+    var currentPosition: Long = exoPlayer.currentPosition
+    var currentWindowIndex: Int = exoPlayer.currentWindowIndex
+    var callback: Callback? = null
 
     private val dataSourceFactory: DefaultDataSourceFactory by lazy {
         DefaultDataSourceFactory(
             context,
-            Util.getUserAgent(context, "com.rakuishi.music"),
+            Util.getUserAgent(context, context.packageName),
             null
         )
     }
@@ -30,34 +40,38 @@ class MusicPlayer(private val context: Context) : Player.EventListener {
         exoPlayer.addListener(this)
     }
 
-    fun start(songs: List<Song>) {
-        this.songs = songs
+    fun prepare(metadataList: List<MediaMetadataCompat>) {
+        this.metadataList = metadataList
 
         val mediaSources = ConcatenatingMediaSource()
-        for (song in songs) {
+        for (metadata in metadataList) {
+            val path = metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)
             val mediaSource =
-                ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(song.contentUri)
+                ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(path))
             mediaSources.addMediaSource(mediaSource)
         }
+
         exoPlayer.prepare(mediaSources)
-
-        exoPlayer.playWhenReady = true
     }
 
-    fun previous() {
-        exoPlayer.previous()
-    }
-
-    fun next() {
-        exoPlayer.next()
-    }
-
-    fun resume() {
+    fun play() {
         exoPlayer.playWhenReady = true
     }
 
     fun pause() {
         exoPlayer.playWhenReady = false
+    }
+
+    fun skipToPrevious() {
+        exoPlayer.previous()
+    }
+
+    fun skipToNext() {
+        exoPlayer.next()
+    }
+
+    fun stop() {
+        exoPlayer.stop()
     }
 
     fun destroy() {
@@ -73,6 +87,7 @@ class MusicPlayer(private val context: Context) : Player.EventListener {
         trackSelections: TrackSelectionArray
     ) {
         super.onTracksChanged(trackGroups, trackSelections)
-        Timber.d("onTracksChanged: %s", songs[exoPlayer.currentWindowIndex].toString())
+        callback?.onMetadataChanged(metadataList[exoPlayer.currentWindowIndex])
+        Timber.d("onTracksChanged: %s", metadataList[exoPlayer.currentWindowIndex])
     }
 }
