@@ -12,7 +12,6 @@ import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
-import timber.log.Timber
 
 class MusicPlayer(private val context: Context) : Player.EventListener {
 
@@ -23,8 +22,6 @@ class MusicPlayer(private val context: Context) : Player.EventListener {
     private var metadataList: List<MediaMetadataCompat> = arrayListOf()
     private var exoPlayer: ExoPlayer = SimpleExoPlayer.Builder(context).build()
 
-    var currentPosition: Long = exoPlayer.currentPosition
-    var currentWindowIndex: Int = exoPlayer.currentWindowIndex
     var callback: Callback? = null
 
     private val dataSourceFactory: DefaultDataSourceFactory by lazy {
@@ -64,10 +61,12 @@ class MusicPlayer(private val context: Context) : Player.EventListener {
 
     fun skipToPrevious() {
         exoPlayer.previous()
+        exoPlayer.playWhenReady = true
     }
 
     fun skipToNext() {
         exoPlayer.next()
+        exoPlayer.playWhenReady = true
     }
 
     fun stop() {
@@ -78,16 +77,19 @@ class MusicPlayer(private val context: Context) : Player.EventListener {
         exoPlayer.release()
     }
 
-    fun isPlaying(): Boolean {
-        return exoPlayer.isPlaying
+    fun getCurrentPosition(): Long {
+        return exoPlayer.currentPosition
+    }
+
+    fun getCurrentWindowIndex(): Int {
+        return exoPlayer.currentWindowIndex
     }
 
     override fun onTracksChanged(
         trackGroups: TrackGroupArray,
         trackSelections: TrackSelectionArray
     ) {
-        super.onTracksChanged(trackGroups, trackSelections)
+        // This callback fires twice if you call skipToPrevious() or skipToNext() manually
         callback?.onMetadataChanged(metadataList[exoPlayer.currentWindowIndex])
-        Timber.d("onTracksChanged: %s", metadataList[exoPlayer.currentWindowIndex])
     }
 }

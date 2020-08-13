@@ -15,7 +15,6 @@ import javax.inject.Inject
 class MusicPlayerService : MediaBrowserServiceCompat(), MusicPlayer.Callback {
 
     companion object {
-        const val ALBUM_ID = "album_id"
         private const val MEDIA_ROOT_ID = "media_root_id"
         private const val EMPTY_MEDIA_ROOT_ID = "empty_root_id"
         private const val LOG_TAG = "MusicPlayerService"
@@ -24,9 +23,10 @@ class MusicPlayerService : MediaBrowserServiceCompat(), MusicPlayer.Callback {
     @Inject
     lateinit var musicRepository: MusicRepository
 
+    private lateinit var musicPlayer: MusicPlayer
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var stateBuilder: PlaybackStateCompat.Builder
-    private lateinit var musicPlayer: MusicPlayer
+    private lateinit var notificationManager: MusicNotificationManager
     private var metadataList: List<MediaMetadataCompat> = arrayListOf()
     private var albumId: Long = -1
 
@@ -47,6 +47,14 @@ class MusicPlayerService : MediaBrowserServiceCompat(), MusicPlayer.Callback {
             setCallback(mediaSessionCallback)
             setSessionToken(sessionToken)
         }
+
+        notificationManager =
+            MusicNotificationManager(this, mediaSession)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        musicPlayer.destroy()
     }
 
     override fun onGetRoot(
@@ -85,45 +93,51 @@ class MusicPlayerService : MediaBrowserServiceCompat(), MusicPlayer.Callback {
     private val mediaSessionCallback = object : MediaSessionCompat.Callback() {
 
         override fun onPrepareFromMediaId(mediaId: String?, extras: Bundle?) {
-            setNewState(PlaybackStateCompat.STATE_PAUSED)
             albumId = mediaId?.toLong() ?: -1
             metadataList = musicRepository.retrieveSongs(albumId).map { it.toMediaMetadataCompat() }
             musicPlayer.prepare(metadataList)
+            setNewState(PlaybackStateCompat.STATE_PAUSED)
 
             notifyChildrenChanged(MEDIA_ROOT_ID)
         }
 
         override fun onPrepare() {
-            setNewState(PlaybackStateCompat.STATE_PAUSED)
             musicPlayer.prepare(metadataList)
+            setNewState(PlaybackStateCompat.STATE_PAUSED)
         }
 
         override fun onPlay() {
-            setNewState(PlaybackStateCompat.STATE_PLAYING)
             mediaSession.isActive = true
-            mediaSession.setMetadata(metadataList[musicPlayer.currentWindowIndex])
+            mediaSession.setMetadata(metadataList[musicPlayer.getCurrentWindowIndex()])
             musicPlayer.play()
+            setNewState(PlaybackStateCompat.STATE_PLAYING)
+
+            notificationManager.start()
         }
 
         override fun onPause() {
-            setNewState(PlaybackStateCompat.STATE_PAUSED)
             musicPlayer.pause()
+            setNewState(PlaybackStateCompat.STATE_PAUSED)
+
+            notificationManager.stop()
         }
 
         override fun onSkipToPrevious() {
-            setNewState(PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS)
             musicPlayer.skipToPrevious()
+            setNewState(PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS)
+            setNewState(PlaybackStateCompat.STATE_PLAYING)
         }
 
         override fun onSkipToNext() {
-            setNewState(PlaybackStateCompat.STATE_SKIPPING_TO_NEXT)
             musicPlayer.skipToNext()
+            setNewState(PlaybackStateCompat.STATE_SKIPPING_TO_NEXT)
+            setNewState(PlaybackStateCompat.STATE_PLAYING)
         }
 
         override fun onStop() {
-            setNewState(PlaybackStateCompat.STATE_STOPPED)
             mediaSession.isActive = false
             musicPlayer.stop()
+            setNewState(PlaybackStateCompat.STATE_STOPPED)
             stopSelf()
         }
     }
@@ -133,7 +147,7 @@ class MusicPlayerService : MediaBrowserServiceCompat(), MusicPlayer.Callback {
         stateBuilder = PlaybackStateCompat.Builder()
         stateBuilder
             .setActions(getAvailableActions())
-            .setState(newState, musicPlayer.currentPosition, 1.0f)
+            .setState(newState, musicPlayer.getCurrentPosition(), 1.0f)
         mediaSession.setPlaybackState(stateBuilder.build())
     }
 
@@ -173,6 +187,7 @@ class MusicPlayerService : MediaBrowserServiceCompat(), MusicPlayer.Callback {
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat) {
         mediaSession.setMetadata(metadata)
+        notificationManager.update()
     }
 
     // endregion

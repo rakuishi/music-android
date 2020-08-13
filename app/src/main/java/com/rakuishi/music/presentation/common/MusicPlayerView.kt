@@ -50,18 +50,30 @@ class MusicPlayerView @JvmOverloads constructor(
     fun play() {
         isPlaying = true
         playImageView.setImageResource(R.drawable.ic_round_pause_24)
-
-        skipToPrevImageView.setColorFilter(ContextCompat.getColor(context, R.color.colorForeground))
-        playImageView.setColorFilter(ContextCompat.getColor(context, R.color.colorForeground))
-        skipToNextImageView.setColorFilter(ContextCompat.getColor(context, R.color.colorForeground))
-
-        skipToPrevImageView.isEnabled = true
-        playImageView.isEnabled = true
-        skipToNextImageView.isEnabled = true
+        setMusicPlayerEnabled(true)
     }
 
     fun pause() {
         isPlaying = false
         playImageView.setImageResource(R.drawable.ic_round_play_arrow_24)
+    }
+
+    fun stop() {
+        isPlaying = false
+        setMusicPlayerEnabled(false)
+    }
+
+    private fun setMusicPlayerEnabled(isEnabled: Boolean) {
+        val colorFilter =
+            if (isEnabled) ContextCompat.getColor(context, R.color.colorForeground)
+            else ContextCompat.getColor(context, R.color.colorForegroundDisabled)
+
+        skipToPrevImageView.setColorFilter(colorFilter)
+        playImageView.setColorFilter(colorFilter)
+        skipToNextImageView.setColorFilter(colorFilter)
+
+        skipToPrevImageView.isEnabled = isEnabled
+        playImageView.isEnabled = isEnabled
+        skipToNextImageView.isEnabled = isEnabled
     }
 }

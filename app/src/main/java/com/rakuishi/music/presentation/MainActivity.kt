@@ -54,6 +54,9 @@ class MainActivity : AppCompatActivity() {
                 PlaybackStateCompat.STATE_SKIPPING_TO_NEXT -> {
                     musicPlayerView.play()
                 }
+                PlaybackStateCompat.STATE_STOPPED -> {
+                    musicPlayerView.stop()
+                }
                 else -> {
                     musicPlayerView.pause()
                 }
