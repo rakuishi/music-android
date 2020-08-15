@@ -59,6 +59,10 @@ class MusicPlayer(private val context: Context) : Player.EventListener {
         exoPlayer.playWhenReady = false
     }
 
+    fun seekTo(positionMs: Long) {
+        exoPlayer.seekTo(positionMs)
+    }
+
     fun skipToPrevious() {
         exoPlayer.previous()
         exoPlayer.playWhenReady = true

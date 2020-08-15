@@ -122,15 +122,18 @@ class MusicPlayerService : MediaBrowserServiceCompat(), MusicPlayer.Callback {
             notificationManager.stop()
         }
 
+        override fun onSeekTo(pos: Long) {
+            musicPlayer.seekTo(pos)
+            setNewState(PlaybackStateCompat.STATE_PLAYING)
+        }
+
         override fun onSkipToPrevious() {
             musicPlayer.skipToPrevious()
-            setNewState(PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS)
             setNewState(PlaybackStateCompat.STATE_PLAYING)
         }
 
         override fun onSkipToNext() {
             musicPlayer.skipToNext()
-            setNewState(PlaybackStateCompat.STATE_SKIPPING_TO_NEXT)
             setNewState(PlaybackStateCompat.STATE_PLAYING)
         }
 
