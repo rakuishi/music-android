@@ -1,7 +1,6 @@
 package com.rakuishi.music.presentation.music
 
 import android.content.Context
-import android.net.Uri
 import android.support.v4.media.MediaMetadataCompat
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
@@ -12,6 +11,7 @@ import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import com.rakuishi.music.util.mediaUri
 
 class MusicPlayer(private val context: Context) : Player.EventListener {
 
@@ -42,9 +42,9 @@ class MusicPlayer(private val context: Context) : Player.EventListener {
 
         val mediaSources = ConcatenatingMediaSource()
         for (metadata in metadataList) {
-            val path = metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)
             val mediaSource =
-                ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(path))
+                ProgressiveMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(metadata.mediaUri)
             mediaSources.addMediaSource(mediaSource)
         }
 
