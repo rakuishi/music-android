@@ -53,7 +53,7 @@ class MusicPlayerService : MediaBrowserServiceCompat(), MusicPlayer.Callback {
     private var albumId: Long = -1
 
     @PlaybackStateCompat.State
-    private var mediaState: Int = PlaybackStateCompat.STATE_NONE
+    private var playbackState: Int = PlaybackStateCompat.STATE_NONE
 
     override fun onCreate() {
         super.onCreate()
@@ -173,7 +173,7 @@ class MusicPlayerService : MediaBrowserServiceCompat(), MusicPlayer.Callback {
 
         override fun onSeekTo(pos: Long) {
             musicPlayer.seekTo(pos)
-            setNewState(PlaybackStateCompat.STATE_PLAYING)
+            setNewState(playbackState)
         }
 
         override fun onSkipToPrevious() {
@@ -197,7 +197,7 @@ class MusicPlayerService : MediaBrowserServiceCompat(), MusicPlayer.Callback {
     }
 
     private fun setNewState(@PlaybackStateCompat.State newState: Int) {
-        mediaState = newState
+        playbackState = newState
         stateBuilder = PlaybackStateCompat.Builder()
         stateBuilder
             .setActions(getAvailableActions())
@@ -213,7 +213,7 @@ class MusicPlayerService : MediaBrowserServiceCompat(), MusicPlayer.Callback {
                         or PlaybackStateCompat.ACTION_SKIP_TO_NEXT
                         or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
                 )
-        actions = when (mediaState) {
+        actions = when (playbackState) {
             PlaybackStateCompat.STATE_STOPPED -> actions or (
                     PlaybackStateCompat.ACTION_PLAY
                             or PlaybackStateCompat.ACTION_PAUSE

@@ -8,9 +8,7 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.rakuishi.music.presentation.music.MusicPlayerService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
@@ -24,6 +22,8 @@ class MainViewModel @ViewModelInject constructor(
     @Suppress("PrivatePropertyName")
     private val NOTHING_PLAYING: MediaMetadataCompat = MediaMetadataCompat.Builder()
         .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "")
+        .putString(MediaMetadataCompat.METADATA_KEY_TITLE, "")
+        .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "")
         .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, 0)
         .build()
 
@@ -45,12 +45,20 @@ class MainViewModel @ViewModelInject constructor(
     private val subscriptionCallback = MediaBrowserSubscriptionCallback()
     private val controllerCallback = MediaControllerCallback()
 
+    private val mediaMetadata = MutableLiveData<MediaMetadataCompat>()
+        .apply { value = NOTHING_PLAYING }
+    private val playbackState = MutableLiveData<PlaybackStateCompat>()
+        .apply { value = EMPTY_PLAYBACK_STATE }
+
     val isConnected = MutableLiveData<Boolean>()
         .apply { postValue(false) }
-    val playbackState = MutableLiveData<PlaybackStateCompat>()
-        .apply { postValue(EMPTY_PLAYBACK_STATE) }
-    val nowPlaying = MutableLiveData<MediaMetadataCompat>()
-        .apply { postValue(NOTHING_PLAYING) }
+    val mediaState = MediatorLiveData<Pair<MediaMetadataCompat, PlaybackStateCompat>>().apply {
+        val observer = Observer<Any?> {
+            this.value = Pair(mediaMetadata.value!!, playbackState.value!!)
+        }
+        this.addSource(playbackState, observer)
+        this.addSource(mediaMetadata, observer)
+    }
 
     override fun onCleared() {
         super.onCleared()
@@ -68,7 +76,10 @@ class MainViewModel @ViewModelInject constructor(
             }
 
             mediaBrowser.subscribe(mediaBrowser.root, subscriptionCallback)
+
             isConnected.postValue(true)
+            if (mediaController.metadata != null) mediaMetadata.postValue(mediaController.metadata)
+            if (mediaController.playbackState != null) playbackState.postValue(mediaController.playbackState)
         }
 
         override fun onConnectionSuspended() {
@@ -91,7 +102,7 @@ class MainViewModel @ViewModelInject constructor(
         }
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
-            nowPlaying.postValue(metadata)
+            this@MainViewModel.mediaMetadata.postValue(metadata)
         }
     }
 
@@ -114,5 +125,9 @@ class MainViewModel @ViewModelInject constructor(
 
     fun skipToNext() {
         mediaController.transportControls.skipToNext()
+    }
+
+    fun seekTo(pos: Long) {
+        mediaController.transportControls.seekTo(pos)
     }
 }

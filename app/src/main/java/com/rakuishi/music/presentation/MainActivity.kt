@@ -3,7 +3,6 @@ package com.rakuishi.music.presentation
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.media.session.PlaybackStateCompat
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -51,24 +50,9 @@ class MainActivity : AppCompatActivity() {
             Timber.d("isConnected: %s", it)
         })
 
-        viewModel.nowPlaying.observe(this, Observer {
-            Timber.d("onMetadataChanged: %s", it?.description?.title)
-        })
-
-        viewModel.playbackState.observe(this, Observer {
-            when (it.state) {
-                PlaybackStateCompat.STATE_PLAYING,
-                PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS,
-                PlaybackStateCompat.STATE_SKIPPING_TO_NEXT -> {
-                    musicPlayerView.play()
-                }
-                PlaybackStateCompat.STATE_STOPPED -> {
-                    musicPlayerView.stop()
-                }
-                else -> {
-                    musicPlayerView.pause()
-                }
-            }
+        viewModel.mediaState.observe(this, Observer {
+            Timber.d("mediaState: %s %d", it.first.description?.title, it.second.state)
+            musicPlayerView.update(it.first, it.second)
         })
     }
 
@@ -78,6 +62,7 @@ class MainActivity : AppCompatActivity() {
             onSkipToNext = { viewModel.skipToNext() }
             onPlay = { viewModel.play() }
             onPause = { viewModel.pause() }
+            onSeekTo = { viewModel.seekTo(it) }
         }
     }
 
