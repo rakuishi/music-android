@@ -5,8 +5,63 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
-    tools:background="@drawable/background_music_player">
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp"
+    tools:background="@drawable/background_music_player"
+    tools:ignore="RtlHardcoded">
+
+    <RelativeLayout
+        android:id="@+id/metadataLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/artworkImageView"
+            android:layout_width="@dimen/artwork"
+            android:layout_height="@dimen/artwork"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:adjustViewBounds="true"
+            android:cropToPadding="true"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayArtwork" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/artworkImageView"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/titleTextView"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="ハミダシモノ" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/albumTextView"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="ハミダシモノ" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/artistTextView"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="楠木ともり" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,9 +81,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="8dp"
             app:thumbColor="@color/colorAccent"
-            app:thumbRadius="8dp" />
+            app:thumbRadius="8dp"
+            app:tickColorActive="@android:color/transparent"
+            app:trackColorActive="@color/colorAccent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/remainingPositionTextView"
@@ -47,7 +103,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="4" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/skipToPrevImageView"
@@ -63,7 +119,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="2" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/playImageView"
@@ -79,7 +135,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="2" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/skipToNextImageView"
@@ -95,7 +151,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="4" />
 
     </LinearLayout>
 

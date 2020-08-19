@@ -13,6 +13,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.media.session.MediaButtonReceiver
 import com.rakuishi.music.R
+import com.rakuishi.music.util.loadThumbnail
 
 class MusicNotificationManager(
     private val service: MusicPlayerService,
@@ -57,7 +58,12 @@ class MusicNotificationManager(
             setContentTitle(description.title)
             setSubText(description.description)
             setContentText(description.subtitle)
-            setLargeIcon(description.iconBitmap)
+            setLargeIcon(
+                description.mediaUri?.loadThumbnail(
+                    context,
+                    R.dimen.notification_artwork
+                )
+            )
 
             // Make the transport controls visible on the lockscreen
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

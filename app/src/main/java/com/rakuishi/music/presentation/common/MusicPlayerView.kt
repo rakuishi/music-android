@@ -10,7 +10,7 @@ import android.view.View
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.rakuishi.music.R
-import com.rakuishi.music.util.duration
+import com.rakuishi.music.util.*
 import kotlinx.android.synthetic.main.view_music_player.view.*
 import java.util.*
 import kotlin.math.floor
@@ -104,6 +104,19 @@ class MusicPlayerView @JvmOverloads constructor(
         this.playbackState = playbackState
         this.position = playbackState.position
 
+        metadataLayout.visibility = View.VISIBLE
+        artworkImageView.apply {
+            val bitmap = mediaMetadata.mediaUri?.loadThumbnail(
+                context,
+                R.dimen.artwork
+            )
+            setImageBitmap(bitmap)
+            visibility = if (bitmap != null) View.VISIBLE else View.GONE
+        }
+        titleTextView.text = mediaMetadata.title
+        albumTextView.text = mediaMetadata.album
+        artistTextView.text = mediaMetadata.artist
+
         isPlaying = true
         playImageView.setImageResource(R.drawable.ic_round_pause_24)
         setMusicPlayerEnabled(true)
@@ -141,7 +154,7 @@ class MusicPlayerView @JvmOverloads constructor(
 
     private fun updateSlider() {
         val duration = mediaMetadata?.duration ?: 0
-        if (duration == 0L || position == 0L) return
+        if (duration == 0L) return
 
         slider.valueTo = (duration / 1000).toFloat()
         slider.value = (position / 1000).toFloat()
@@ -149,7 +162,7 @@ class MusicPlayerView @JvmOverloads constructor(
 
     private fun updatePositionTextView() {
         val duration = mediaMetadata?.duration ?: 0
-        if (duration == 0L || position == 0L) return
+        if (duration == 0L) return
 
         currentPositionTextView.text = getMSSFormat(position)
         remainingPositionTextView.text = getMSSFormat(duration - position)

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="artwork">56dp</dimen>
+    <dimen name="artwork">64dp</dimen>
     <dimen name="artwork_radius">4dp</dimen>
+    <dimen name="notification_artwork">192dp</dimen>
 </resources>

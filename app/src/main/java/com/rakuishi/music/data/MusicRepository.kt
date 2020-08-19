@@ -67,6 +67,8 @@ class MusicRepository(private val context: Context) {
             cursor.getColumnIndex(MediaStore.Audio.Media._ID)
         val titleColumn: Int =
             cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
+        val albumColumn: Int =
+            cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
         val artistColumn: Int =
             cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
         val durationColumn: Int =
@@ -80,6 +82,7 @@ class MusicRepository(private val context: Context) {
                 id
             )
             val title = cursor.getString(titleColumn)
+            val album = cursor.getString(albumColumn)
             val artist = cursor.getString(artistColumn)
             val duration = cursor.getLong(durationColumn)
 
@@ -96,6 +99,7 @@ class MusicRepository(private val context: Context) {
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, id.toString())
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, mediaUri.toString())
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, album)
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DISC_NUMBER, discNumber)
