@@ -36,6 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/artworkImageView"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/artwork"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -84,7 +86,9 @@
             app:thumbColor="@color/colorAccent"
             app:thumbRadius="8dp"
             app:tickColorActive="@android:color/transparent"
-            app:trackColorActive="@color/colorAccent" />
+            app:tickColorInactive="@android:color/transparent"
+            app:trackColorActive="@color/colorAccent"
+            app:trackColorInactive="@color/colorForegroundDisabled" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/remainingPositionTextView"

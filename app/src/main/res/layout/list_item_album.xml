@@ -26,6 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/artworkImageView"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/artwork"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.AppCompatTextView
