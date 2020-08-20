@@ -108,6 +108,13 @@ class MainViewModel @ViewModelInject constructor(
         }
     }
 
+    fun requestCurrentMediaState() {
+        if (isConnected.value == true) {
+            mediaController.metadata?.let { mediaMetadata.postValue(it) }
+            mediaController.playbackState?.let { playbackState.postValue(it) }
+        }
+    }
+
     fun play() {
         mediaController.transportControls.play()
     }

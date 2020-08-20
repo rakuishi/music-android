@@ -39,6 +39,11 @@ class MainActivity : AppCompatActivity() {
         bindUi()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.requestCurrentMediaState()
+    }
+
     private fun replaceFragment() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, AlbumListFragment.newInstance())

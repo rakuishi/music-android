@@ -251,6 +251,7 @@ class MusicPlayerService : MediaBrowserServiceCompat(), MusicPlayer.Callback {
 
     override fun onMetadataChanged(metadata: MediaMetadataCompat) {
         mediaSession.setMetadata(metadata)
+        setNewState(playbackState) // due to update current position
         notificationManager.update()
     }
 

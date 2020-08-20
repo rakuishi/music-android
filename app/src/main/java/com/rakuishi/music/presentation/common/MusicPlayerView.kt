@@ -70,19 +70,20 @@ class MusicPlayerView @JvmOverloads constructor(
     }
 
     fun update(mediaMetadata: MediaMetadataCompat, playbackState: PlaybackStateCompat) {
+        this.mediaMetadata = mediaMetadata
+        this.playbackState = playbackState
+        this.position = playbackState.position
+
         when (playbackState.state) {
             PlaybackStateCompat.STATE_PLAYING,
             PlaybackStateCompat.STATE_SKIPPING_TO_PREVIOUS,
             PlaybackStateCompat.STATE_SKIPPING_TO_NEXT -> {
-                play(mediaMetadata, playbackState)
+                play()
             }
             PlaybackStateCompat.STATE_STOPPED -> {
                 stop()
             }
             else -> {
-                position = playbackState.position
-                updateSlider()
-                updatePositionTextView()
                 pause()
             }
         }
@@ -92,34 +93,8 @@ class MusicPlayerView @JvmOverloads constructor(
     private fun play() {
         isPlaying = true
         playImageView.setImageResource(R.drawable.ic_round_pause_24)
-        setMusicPlayerEnabled(true)
-        schedulePositionTimer()
-    }
-
-    private fun play(
-        mediaMetadata: MediaMetadataCompat,
-        playbackState: PlaybackStateCompat
-    ) {
-        this.mediaMetadata = mediaMetadata
-        this.playbackState = playbackState
-        this.position = playbackState.position
-
-        metadataLayout.visibility = View.VISIBLE
-        artworkImageView.apply {
-            val bitmap = mediaMetadata.mediaUri?.loadThumbnail(
-                context,
-                R.dimen.artwork
-            )
-            setImageBitmap(bitmap)
-            visibility = if (bitmap != null) View.VISIBLE else View.GONE
-        }
-        titleTextView.text = mediaMetadata.title
-        albumTextView.text = mediaMetadata.album
-        artistTextView.text = mediaMetadata.artist
-
-        isPlaying = true
-        playImageView.setImageResource(R.drawable.ic_round_pause_24)
-        setMusicPlayerEnabled(true)
+        setMusicPlayerEnabled(mediaMetadata?.isNotEmpty == true)
+        updateMetadataLayout()
         updateSlider()
         updatePositionTextView()
         schedulePositionTimer()
@@ -128,12 +103,20 @@ class MusicPlayerView @JvmOverloads constructor(
     private fun pause() {
         isPlaying = false
         playImageView.setImageResource(R.drawable.ic_round_play_arrow_24)
+        setMusicPlayerEnabled(mediaMetadata?.isNotEmpty == true)
+        updateMetadataLayout()
+        updateSlider()
+        updatePositionTextView()
         cancelPositionTimer()
     }
 
     private fun stop() {
         isPlaying = false
+        playImageView.setImageResource(R.drawable.ic_round_play_arrow_24)
         setMusicPlayerEnabled(false)
+        updateMetadataLayout()
+        updateSlider()
+        updatePositionTextView()
         cancelPositionTimer()
     }
 
@@ -152,20 +135,51 @@ class MusicPlayerView @JvmOverloads constructor(
         skipToNextImageView.isEnabled = isEnabled
     }
 
+    private fun updateMetadataLayout() {
+        val isNotStopped = playbackState?.state != PlaybackStateCompat.STATE_STOPPED
+
+        if (mediaMetadata?.isNotEmpty == true && isNotStopped) {
+            metadataLayout.visibility = View.VISIBLE
+            artworkImageView.apply {
+                val bitmap = mediaMetadata?.mediaUri?.loadThumbnail(
+                    context,
+                    R.dimen.artwork
+                )
+                setImageBitmap(bitmap)
+                visibility = if (bitmap != null) View.VISIBLE else View.GONE
+            }
+            titleTextView.text = mediaMetadata?.title
+            albumTextView.text = mediaMetadata?.album
+            artistTextView.text = mediaMetadata?.artist
+        } else {
+            metadataLayout.visibility = View.GONE
+        }
+    }
+
     private fun updateSlider() {
         val duration = mediaMetadata?.duration ?: 0
-        if (duration == 0L) return
+        val isNotStopped = playbackState?.state != PlaybackStateCompat.STATE_STOPPED
 
-        slider.valueTo = (duration / 1000).toFloat()
-        slider.value = (position / 1000).toFloat()
+        if (duration > 0L && duration > position && isNotStopped) {
+            slider.valueTo = (duration / 1000).toFloat()
+            slider.value = (position / 1000).toFloat()
+        } else {
+            slider.value = 0f
+            slider.valueTo = 1f
+        }
     }
 
     private fun updatePositionTextView() {
         val duration = mediaMetadata?.duration ?: 0
-        if (duration == 0L) return
+        val isNotStopped = playbackState?.state != PlaybackStateCompat.STATE_STOPPED
 
-        currentPositionTextView.text = getMSSFormat(position)
-        remainingPositionTextView.text = getMSSFormat(duration - position)
+        if (duration > 0L && isNotStopped) {
+            currentPositionTextView.text = getMSSFormat(position)
+            remainingPositionTextView.text = getMSSFormat(duration - position)
+        } else {
+            currentPositionTextView.text = "0:00"
+            remainingPositionTextView.text = "0:00"
+        }
     }
 
     private fun getMSSFormat(milliseconds: Long): String {

@@ -29,3 +29,6 @@ val MediaMetadataCompat.trackNumber: Long
 
 val MediaMetadataCompat.discNumber: Long
     get() = getLong(MediaMetadataCompat.METADATA_KEY_DISC_NUMBER)
+
+val MediaMetadataCompat.isNotEmpty: Boolean
+    get() = id.isNotBlank() && mediaUri != null && duration > 0L
