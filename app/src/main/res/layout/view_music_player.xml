@@ -76,7 +76,7 @@
             style="@style/TextAppearance.AppCompat.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0:00" />
+            android:text="@string/default_mss" />
 
         <com.google.android.material.slider.Slider
             android:id="@+id/slider"
@@ -95,7 +95,7 @@
             style="@style/TextAppearance.AppCompat.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0:00" />
+            android:text="@string/default_mss" />
 
     </LinearLayout>
 

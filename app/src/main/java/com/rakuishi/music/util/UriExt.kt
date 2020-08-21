@@ -5,13 +5,14 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Size
 import androidx.annotation.DimenRes
+import androidx.core.graphics.drawable.toBitmap
+import com.rakuishi.music.R
 
 fun Uri.loadThumbnail(context: Context, @DimenRes dimenRes: Int): Bitmap? {
+    val pixel = context.resources.getDimension(dimenRes).toInt()
     return try {
-        val dp = context.resources.getDimension(dimenRes).toInt()
-        val size = Size(dp, dp)
-        context.contentResolver.loadThumbnail(this, size, null)
+        context.contentResolver.loadThumbnail(this, Size(pixel, pixel), null)
     } catch (e: Exception) {
-        null
+        context.getDrawable(R.drawable.placeholder_playback)?.toBitmap(pixel, pixel)
     }
 }

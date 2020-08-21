@@ -146,11 +146,10 @@ class MusicPlayerView @JvmOverloads constructor(
                     R.dimen.artwork
                 )
                 setImageBitmap(bitmap)
-                visibility = if (bitmap != null) View.VISIBLE else View.GONE
             }
             titleTextView.text = mediaMetadata?.title
             albumTextView.text = mediaMetadata?.album
-            artistTextView.text = mediaMetadata?.artist
+            artistTextView.text = mediaMetadata?.artist?.replaceIfUnknownArtist(context)
         } else {
             metadataLayout.visibility = View.GONE
         }
@@ -177,8 +176,8 @@ class MusicPlayerView @JvmOverloads constructor(
             currentPositionTextView.text = getMSSFormat(position)
             remainingPositionTextView.text = getMSSFormat(duration - position)
         } else {
-            currentPositionTextView.text = "0:00"
-            remainingPositionTextView.text = "0:00"
+            currentPositionTextView.text = context.getString(R.string.default_mss)
+            remainingPositionTextView.text = context.getString(R.string.default_mss)
         }
     }
 

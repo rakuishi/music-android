@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Music</string>
+    <string name="playback">再生</string>
+    <string name="play">再生</string>
+    <string name="pause">一時停止</string>
+    <string name="skip_to_previous">次に進む</string>
+    <string name="skip_to_next">前に戻る</string>
+    <string name="unknown_artist">不明なアーティスト</string>
+    <string name="default_mss">0:00</string>
+</resources>

@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">Music</string>
-    <string name="music_player">Music Player</string>
+    <string name="playback">再生</string>
     <string name="play">Play</string>
     <string name="pause">Pause</string>
     <string name="skip_to_previous">Skip to previous</string>
     <string name="skip_to_next">Skip to next</string>
+    <string name="unknown_artist">Unknown Artist</string>
+    <string name="default_mss">0:00</string>
 </resources>

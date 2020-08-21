@@ -1,12 +1,12 @@
 package com.rakuishi.music.presentation.album
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.rakuishi.music.R
 import com.rakuishi.music.model.Album
 import com.rakuishi.music.util.loadThumbnail
+import com.rakuishi.music.util.replaceIfUnknownArtist
 import kotlinx.android.synthetic.main.list_item_album.view.*
 
 
@@ -23,11 +23,10 @@ class AlbumViewHolder(parent: ViewGroup) :
         }
 
         itemView.titleTextView.text = album.title
-        itemView.artistTextView.text = album.artist
+        itemView.artistTextView.text = album.artist.replaceIfUnknownArtist(itemView.context)
         itemView.artworkImageView.apply {
             val bitmap = album.contentUri.loadThumbnail(itemView.context, R.dimen.artwork)
             setImageBitmap(bitmap)
-            visibility = if (bitmap != null) View.VISIBLE else View.GONE
         }
     }
 }

@@ -54,7 +54,7 @@ class MusicNotificationManager(
             context,
             NOTIFICATION_CHANNEL_ID
         ).apply {
-            setSmallIcon(R.drawable.ic_round_music_note_24)
+            setSmallIcon(R.drawable.ic_notification_playback)
             setContentTitle(description.title)
             setSubText(description.description)
             setContentText(description.subtitle)
@@ -148,7 +148,7 @@ class MusicNotificationManager(
         if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null) {
             val channel = NotificationChannel(
                 NOTIFICATION_CHANNEL_ID,
-                context.getString(R.string.music_player),
+                context.getString(R.string.playback),
                 NotificationManager.IMPORTANCE_DEFAULT
             )
             notificationManager.createNotificationChannel(channel)
