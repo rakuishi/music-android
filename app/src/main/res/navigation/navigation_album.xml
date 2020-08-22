@@ -22,11 +22,8 @@
     <fragment
         android:id="@+id/albumDetailFragment"
         android:name="com.rakuishi.music.presentation.album_detail.AlbumDetailFragment"
-        android:label="{title}"
+        android:label=""
         tools:layout="@layout/fragment_album_detail">
-        <argument
-            android:name="title"
-            app:argType="string" />
         <argument
             android:name="album"
             app:argType="com.rakuishi.music.model.Album" />

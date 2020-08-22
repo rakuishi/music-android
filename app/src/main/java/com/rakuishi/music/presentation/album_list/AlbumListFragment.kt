@@ -38,7 +38,7 @@ class AlbumListFragment : Fragment() {
 
     private fun bindUi() {
         adapter.onClick = { album ->
-            val directions = AlbumListFragmentDirections.showDetail(album.title, album)
+            val directions = AlbumListFragmentDirections.showDetail(album)
             findNavController().navigate(directions)
         }
         adapter.onLongClick = { album -> mainViewModel.play(album.id.toString()) }

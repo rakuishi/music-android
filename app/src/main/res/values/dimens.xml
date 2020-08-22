@@ -4,4 +4,6 @@
     <dimen name="artwork_radius">4dp</dimen>
     <dimen name="notification_artwork">192dp</dimen>
     <dimen name="artwork_header">128dp</dimen>
+    <dimen name="actionbar_elevation">4dp</dimen>
+    <dimen name="artwork_header_height">160dp</dimen>
 </resources>

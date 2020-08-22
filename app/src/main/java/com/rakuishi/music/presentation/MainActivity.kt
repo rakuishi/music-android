@@ -56,6 +56,9 @@ class MainActivity : AppCompatActivity() {
             graph = navInflater.inflate(R.navigation.navigation_album)
             appBarConfiguration = AppBarConfiguration(graph)
             this@MainActivity.setupActionBarWithNavController(this, appBarConfiguration)
+            addOnDestinationChangedListener { _, _, _ ->
+                supportActionBar?.elevation = resources.getDimension(R.dimen.actionbar_elevation)
+            }
         }
     }
 
