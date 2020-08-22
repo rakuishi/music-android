@@ -2,15 +2,16 @@ package com.rakuishi.music.model
 
 import android.content.ContentUris
 import android.net.Uri
+import android.os.Parcel
+import android.os.Parcelable
 import android.provider.MediaStore
-import java.io.Serializable
 
 data class Album(
     val id: Long,
     val title: String,
     val artist: String,
     val numberOfSongs: Long
-) : Serializable {
+) : Parcelable {
 
     val contentUri: Uri =
         ContentUris.withAppendedId(
@@ -25,4 +26,34 @@ data class Album(
             artist
         )
     }
+
+    // region Parcelable
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeLong(id)
+        parcel.writeString(title)
+        parcel.writeString(artist)
+        parcel.writeLong(numberOfSongs)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Album> {
+        override fun createFromParcel(parcel: Parcel): Album {
+            return Album(
+                parcel.readLong(),
+                parcel.readString()!!,
+                parcel.readString()!!,
+                parcel.readLong()
+            )
+        }
+
+        override fun newArray(size: Int): Array<Album?> {
+            return arrayOfNulls(size)
+        }
+    }
+
+    // endregion
 }
