@@ -1,4 +1,4 @@
-package com.rakuishi.music.presentation.album
+package com.rakuishi.music.presentation.album_list
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil

@@ -3,12 +3,13 @@ package com.rakuishi.music.model
 import android.content.ContentUris
 import android.net.Uri
 import android.provider.MediaStore
+import java.io.Serializable
 
 data class Album(
     val id: Long,
     val title: String,
     val artist: String
-) {
+) : Serializable {
 
     val contentUri: Uri =
         ContentUris.withAppendedId(

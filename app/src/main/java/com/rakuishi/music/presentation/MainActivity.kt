@@ -8,8 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.rakuishi.music.R
-import com.rakuishi.music.presentation.album.AlbumListFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
@@ -22,17 +25,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val viewModel: MainViewModel by viewModels()
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (savedInstanceState == null) {
-            if (hasReadPermission()) {
-                replaceFragment()
-            } else {
-                requestPermission()
-            }
+        if (hasReadPermission()) {
+            inflateNavigation()
+        } else {
+            requestPermission()
         }
 
         subscribeUi()
@@ -44,10 +46,17 @@ class MainActivity : AppCompatActivity() {
         viewModel.requestCurrentMediaState()
     }
 
-    private fun replaceFragment() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, AlbumListFragment.newInstance())
-            .commitNow()
+    override fun onSupportNavigateUp(): Boolean {
+        return navHostFragment.findNavController().navigateUp(appBarConfiguration)
+                || super.onSupportNavigateUp()
+    }
+
+    private fun inflateNavigation() {
+        navHostFragment.findNavController().apply {
+            graph = navInflater.inflate(R.navigation.navigation_album)
+            appBarConfiguration = AppBarConfiguration(graph)
+            this@MainActivity.setupActionBarWithNavController(this, appBarConfiguration)
+        }
     }
 
     private fun subscribeUi() {
@@ -96,7 +105,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == PERMISSION_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            replaceFragment()
+            inflateNavigation()
         } else {
             Timber.d("onRequestPermissionsResult: failure")
         }

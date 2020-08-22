@@ -1,4 +1,4 @@
-package com.rakuishi.music.presentation.album
+package com.rakuishi.music.presentation.album_list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.rakuishi.music.R
 import com.rakuishi.music.presentation.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,10 +15,6 @@ import kotlinx.android.synthetic.main.fragment_album_list.*
 
 @AndroidEntryPoint
 class AlbumListFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = AlbumListFragment()
-    }
 
     private val mainViewModel: MainViewModel by activityViewModels()
     private val albumViewModel: AlbumListViewModel by viewModels()
@@ -30,10 +27,13 @@ class AlbumListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_album_list, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        adapter.onClick = { album -> mainViewModel.play(album.id) }
+        adapter.onClick = { album ->
+            val directions = AlbumListFragmentDirections.showDetail(album.title, album)
+            findNavController().navigate(directions)
+        }
         adapter.onLongClick = { album -> mainViewModel.play(album.id) }
         adapter.submitList(albumViewModel.retrieveAlbums())
         recyclerView.setHasFixedSize(true)

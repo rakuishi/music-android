@@ -1,4 +1,4 @@
-package com.rakuishi.music.presentation.album
+package com.rakuishi.music.presentation.album_list
 
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
