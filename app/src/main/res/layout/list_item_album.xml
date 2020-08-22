@@ -15,17 +15,17 @@
         android:id="@+id/artworkImageView"
         android:layout_width="@dimen/artwork"
         android:layout_height="@dimen/artwork"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:adjustViewBounds="true"
         android:cropToPadding="true"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayArtwork" />
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayArtwork"
+        tools:src="@drawable/placeholder_playback" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/artworkImageView"
+        android:layout_toEndOf="@+id/artworkImageView"
         android:gravity="center_vertical"
         android:minHeight="@dimen/artwork"
         android:orientation="vertical">

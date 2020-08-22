@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rakuishi.music.model.Album
 
-class AlbumAdapter : ListAdapter<Album, RecyclerView.ViewHolder>(AlbumDiffCallback()) {
+class AlbumListAdapter : ListAdapter<Album, RecyclerView.ViewHolder>(AlbumDiffCallback()) {
 
     var onClick: ((Album) -> Unit)? = null
     var onLongClick: ((Album) -> Unit)? = null

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.rakuishi.music.R
 import com.rakuishi.music.presentation.MainViewModel
@@ -17,8 +18,8 @@ import kotlinx.android.synthetic.main.fragment_album_list.*
 class AlbumListFragment : Fragment() {
 
     private val mainViewModel: MainViewModel by activityViewModels()
-    private val albumViewModel: AlbumListViewModel by viewModels()
-    private val adapter: AlbumAdapter = AlbumAdapter()
+    private val albumListViewModel: AlbumListViewModel by viewModels()
+    private val adapter: AlbumListAdapter = AlbumListAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,13 +31,24 @@ class AlbumListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        bindUi()
+        subscribeUi()
+        albumListViewModel.retrieveAlbums()
+    }
+
+    private fun bindUi() {
         adapter.onClick = { album ->
             val directions = AlbumListFragmentDirections.showDetail(album.title, album)
             findNavController().navigate(directions)
         }
-        adapter.onLongClick = { album -> mainViewModel.play(album.id) }
-        adapter.submitList(albumViewModel.retrieveAlbums())
+        adapter.onLongClick = { album -> mainViewModel.play(album.id.toString()) }
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
+    }
+
+    private fun subscribeUi() {
+        albumListViewModel.albumList.observe(viewLifecycleOwner, Observer {
+            adapter.submitList(it)
+        })
     }
 }

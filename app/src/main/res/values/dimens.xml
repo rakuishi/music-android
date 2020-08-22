@@ -3,4 +3,5 @@
     <dimen name="artwork">64dp</dimen>
     <dimen name="artwork_radius">4dp</dimen>
     <dimen name="notification_artwork">192dp</dimen>
+    <dimen name="artwork_header">128dp</dimen>
 </resources>

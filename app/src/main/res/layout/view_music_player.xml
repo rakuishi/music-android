@@ -9,8 +9,7 @@
     android:paddingTop="8dp"
     android:paddingRight="16dp"
     android:paddingBottom="16dp"
-    tools:background="@drawable/background_music_player"
-    tools:ignore="RtlHardcoded">
+    tools:background="@drawable/background_music_player">
 
     <RelativeLayout
         android:id="@+id/metadataLayout"
@@ -24,18 +23,18 @@
             android:id="@+id/artworkImageView"
             android:layout_width="@dimen/artwork"
             android:layout_height="@dimen/artwork"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="16dp"
             android:adjustViewBounds="true"
             android:cropToPadding="true"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayArtwork" />
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlayArtwork"
+            tools:src="@drawable/placeholder_playback" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/artworkImageView"
+            android:layout_toEndOf="@+id/artworkImageView"
             android:gravity="center_vertical"
             android:minHeight="@dimen/artwork"
             android:orientation="vertical">

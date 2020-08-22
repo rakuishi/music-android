@@ -119,8 +119,8 @@ class MainViewModel @ViewModelInject constructor(
         mediaController.transportControls.play()
     }
 
-    fun play(albumId: Long) {
-        mediaController.transportControls.prepareFromMediaId(albumId.toString(), null)
+    fun play(albumId: String, mediaMetadataId: String? = null) {
+        mediaController.transportControls.prepareFromMediaId(albumId, null)
         mediaController.transportControls.play()
     }
 

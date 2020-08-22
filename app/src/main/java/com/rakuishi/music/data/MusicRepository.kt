@@ -33,12 +33,15 @@ class MusicRepository(private val context: Context) {
             cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)
         val artistColumn: Int =
             cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST)
+        val numberOfSongsColumn: Int =
+            cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS)
 
         do {
             val album = Album(
                 cursor.getLong(idColumn),
                 cursor.getString(titleColumn),
-                cursor.getString(artistColumn)
+                cursor.getString(artistColumn),
+                cursor.getLong(numberOfSongsColumn)
             )
             albums.add(album)
 
