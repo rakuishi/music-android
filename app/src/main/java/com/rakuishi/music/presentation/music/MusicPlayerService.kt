@@ -140,7 +140,7 @@ class MusicPlayerService : MediaBrowserServiceCompat(), MusicPlayer.Callback {
         override fun onPrepareFromMediaId(mediaId: String?, extras: Bundle?) {
             albumId = mediaId?.toLong() ?: -1
             metadataList = musicRepository.retrieveSongs(albumId)
-            musicPlayer.prepare(metadataList)
+            musicPlayer.prepare(metadataList, extras?.getString("mediaMetadataId"))
             setNewState(PlaybackStateCompat.STATE_PAUSED)
 
             notifyChildrenChanged(MEDIA_ROOT_ID)

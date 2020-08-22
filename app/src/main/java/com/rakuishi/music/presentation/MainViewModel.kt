@@ -6,6 +6,7 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import androidx.core.os.bundleOf
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
@@ -120,7 +121,8 @@ class MainViewModel @ViewModelInject constructor(
     }
 
     fun play(albumId: String, mediaMetadataId: String? = null) {
-        mediaController.transportControls.prepareFromMediaId(albumId, null)
+        val bundle = bundleOf("mediaMetadataId" to mediaMetadataId)
+        mediaController.transportControls.prepareFromMediaId(albumId, bundle)
         mediaController.transportControls.play()
     }
 

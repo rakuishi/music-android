@@ -11,6 +11,7 @@ import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import com.rakuishi.music.util.id
 import com.rakuishi.music.util.mediaUri
 
 class MusicPlayer(private val context: Context) : Player.EventListener {
@@ -19,7 +20,7 @@ class MusicPlayer(private val context: Context) : Player.EventListener {
         fun onMetadataChanged(metadata: MediaMetadataCompat)
     }
 
-    private var metadataList: List<MediaMetadataCompat> = arrayListOf()
+    private var metadataList: ArrayList<MediaMetadataCompat> = arrayListOf()
     private var exoPlayer: ExoPlayer = SimpleExoPlayer.Builder(context).build()
 
     var callback: Callback? = null
@@ -37,11 +38,20 @@ class MusicPlayer(private val context: Context) : Player.EventListener {
         exoPlayer.addListener(this)
     }
 
-    fun prepare(metadataList: List<MediaMetadataCompat>) {
-        this.metadataList = metadataList
+    fun prepare(metadataList: List<MediaMetadataCompat>, mediaMetadataId: String? = null) {
+        if (mediaMetadataId != null) {
+            val index =
+                metadataList.indexOfFirst { mediaMetadata -> mediaMetadata.id == mediaMetadataId }
+            this.metadataList.clear()
+            this.metadataList.addAll(metadataList.subList(index, metadataList.size))
+            this.metadataList.addAll(metadataList.subList(0, index))
+        } else {
+            this.metadataList.clear()
+            this.metadataList.addAll(metadataList)
+        }
 
         val mediaSources = ConcatenatingMediaSource()
-        for (metadata in metadataList) {
+        for (metadata in this.metadataList) {
             val mediaSource =
                 ProgressiveMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(metadata.mediaUri)
