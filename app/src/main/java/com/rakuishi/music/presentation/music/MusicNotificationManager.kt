@@ -14,6 +14,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.media.session.MediaButtonReceiver
 import com.rakuishi.music.R
 import com.rakuishi.music.util.loadThumbnail
+import com.rakuishi.music.util.replaceIfUnknownArtist
 
 class MusicNotificationManager(
     private val service: MusicPlayerService,
@@ -57,7 +58,7 @@ class MusicNotificationManager(
             setSmallIcon(R.drawable.ic_notification_playback)
             setContentTitle(description.title)
             setSubText(description.description)
-            setContentText(description.subtitle)
+            setContentText(description.subtitle.toString().replaceIfUnknownArtist(context))
             setLargeIcon(
                 description.mediaUri?.loadThumbnail(
                     context,
