@@ -14,7 +14,7 @@ class AlbumDetailViewHolder(parent: ViewGroup) :
         LayoutInflater.from(parent.context).inflate(R.layout.list_item_album_detail, parent, false)
     ) {
 
-    fun bind(album: Album, onClick: ((Album) -> Unit)?) {
+    fun bind(album: Album, numberOfDiscs: Long = 1L, onClick: ((Album) -> Unit)?) {
         itemView.titleTextView.text = album.title
         itemView.detailTextView.apply {
             val artist = album.artist.replaceIfUnknownArtist(itemView.context)
@@ -24,8 +24,11 @@ class AlbumDetailViewHolder(parent: ViewGroup) :
             val bitmap = album.contentUri.loadThumbnail(itemView.context, R.dimen.artwork_header)
             setImageBitmap(bitmap)
         }
-        itemView.numberOfSongsTextView.text =
-            itemView.context.getString(R.string.number_of_songs, album.numberOfSongs)
+        itemView.numberOfSongsTextView.apply {
+            val song = itemView.context.getString(R.string.number_of_songs, album.numberOfSongs)
+            val disc = itemView.context.getString(R.string.number_of_discs, numberOfDiscs)
+            text = if (numberOfDiscs == 1L) song else "%s・%s".format(song, disc)
+        }
         itemView.playButton.setOnClickListener { onClick?.invoke(album) }
     }
 }

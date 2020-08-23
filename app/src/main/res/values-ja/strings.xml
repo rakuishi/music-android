@@ -8,4 +8,5 @@
     <string name="unknown_artist">不明なアーティスト</string>
     <string name="default_mss">0:00</string>
     <string name="number_of_songs">%d 曲</string>
+    <string name="number_of_discs">%d 枚</string>
 </resources>

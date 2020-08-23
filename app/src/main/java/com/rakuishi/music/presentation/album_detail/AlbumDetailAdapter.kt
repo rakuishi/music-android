@@ -4,6 +4,8 @@ import android.support.v4.media.MediaMetadataCompat
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.rakuishi.music.model.Album
+import com.rakuishi.music.util.discNumber
+import kotlin.math.max
 
 class AlbumDetailAdapter(
     private val album: Album
@@ -24,6 +26,7 @@ class AlbumDetailAdapter(
         notifyDataSetChanged()
 
         this.metadataList.addAll(metadataList)
+        notifyItemChanged(0)
         notifyItemRangeInserted(1, metadataList.size)
     }
 
@@ -50,12 +53,20 @@ class AlbumDetailAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             VIEW_TYPE_ALBUM_HEADER -> {
-                (holder as AlbumDetailViewHolder).bind(album, onAlbumClick)
+                (holder as AlbumDetailViewHolder).bind(album, getNumberOfDiscs(), onAlbumClick)
             }
             VIEW_TYPE_METADATA -> {
                 val metadata = metadataList[position - 1]
                 (holder as MediaMetadataViewHolder).bind(metadata, onMetadataClick)
             }
         }
+    }
+
+    private fun getNumberOfDiscs(): Long {
+        var maxDiscNumber = 1L
+        for (metadata in metadataList) {
+            maxDiscNumber = max(maxDiscNumber, metadata.discNumber)
+        }
+        return maxDiscNumber
     }
 }
