@@ -52,7 +52,6 @@ class MusicRepository(private val context: Context) {
         return albums
     }
 
-    // TODO: use asynchronous method
     fun retrieveSongs(albumId: Long): List<MediaMetadataCompat> {
         val resolver: ContentResolver = context.contentResolver
         val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI

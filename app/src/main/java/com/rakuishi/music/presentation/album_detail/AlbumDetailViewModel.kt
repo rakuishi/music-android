@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rakuishi.music.R
 import com.rakuishi.music.data.MusicRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class AlbumDetailViewModel @ViewModelInject constructor(
     private val musicRepository: MusicRepository,
@@ -43,6 +45,8 @@ class AlbumDetailViewModel @ViewModelInject constructor(
     }
 
     fun retrieveSongs(albumId: Long) {
-        metadataList.postValue(musicRepository.retrieveSongs(albumId))
+        GlobalScope.launch {
+            metadataList.postValue(musicRepository.retrieveSongs(albumId))
+        }
     }
 }

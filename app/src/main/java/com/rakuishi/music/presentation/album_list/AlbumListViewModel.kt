@@ -7,6 +7,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.rakuishi.music.data.MusicRepository
 import com.rakuishi.music.model.Album
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class AlbumListViewModel @ViewModelInject constructor(
     private val musicRepository: MusicRepository,
@@ -17,6 +19,8 @@ class AlbumListViewModel @ViewModelInject constructor(
         .apply { postValue(arrayListOf()) }
 
     fun retrieveAlbums() {
-        albumList.postValue(musicRepository.retrieveAlbums())
+        GlobalScope.launch {
+            albumList.postValue(musicRepository.retrieveAlbums())
+        }
     }
 }
