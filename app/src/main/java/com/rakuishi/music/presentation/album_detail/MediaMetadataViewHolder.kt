@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.rakuishi.music.R
-import com.rakuishi.music.util.artist
-import com.rakuishi.music.util.replaceIfUnknownArtist
-import com.rakuishi.music.util.title
+import com.rakuishi.music.util.*
 import kotlinx.android.synthetic.main.list_item_media_metadata.view.*
 
 class MediaMetadataViewHolder(parent: ViewGroup) :
@@ -20,5 +18,6 @@ class MediaMetadataViewHolder(parent: ViewGroup) :
         itemView.selectableLayout.setOnClickListener { onClick?.invoke(metadata) }
         itemView.titleTextView.text = metadata.title
         itemView.artistTextView.text = metadata.artist.replaceIfUnknownArtist(itemView.context)
+        itemView.durationTextView.text = metadata.duration.getMSSFormat()
     }
 }

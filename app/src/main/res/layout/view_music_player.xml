@@ -116,7 +116,7 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="6dp"
-            android:src="@drawable/ic_round_skip_previous_24"
+            android:src="@drawable/ic_baseline_skip_previous_24"
             android:tint="@color/colorForegroundDisabled" />
 
         <View
@@ -131,8 +131,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
-            android:padding="6dp"
-            android:src="@drawable/ic_round_play_arrow_24"
+            android:src="@drawable/ic_music_player_play_48"
             android:tint="@color/colorForegroundDisabled" />
 
         <View
@@ -148,7 +147,7 @@
             android:clickable="true"
             android:focusable="true"
             android:padding="6dp"
-            android:src="@drawable/ic_round_skip_next_24"
+            android:src="@drawable/ic_baseline_skip_next_24"
             android:tint="@color/colorForegroundDisabled" />
 
         <View

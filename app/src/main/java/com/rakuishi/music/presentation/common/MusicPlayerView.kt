@@ -13,7 +13,6 @@ import com.rakuishi.music.R
 import com.rakuishi.music.util.*
 import kotlinx.android.synthetic.main.view_music_player.view.*
 import java.util.*
-import kotlin.math.floor
 
 class MusicPlayerView @JvmOverloads constructor(
     context: Context,
@@ -41,7 +40,7 @@ class MusicPlayerView @JvmOverloads constructor(
 
         slider.apply {
             stepSize = 1f
-            setLabelFormatter { getMSSFormat((it * 1000L).toLong()) }
+            setLabelFormatter { (it * 1000L).toLong().getMSSFormat() }
 
             addOnChangeListener { _, value, fromUser ->
                 if (fromUser) {
@@ -92,7 +91,7 @@ class MusicPlayerView @JvmOverloads constructor(
 
     private fun play() {
         isPlaying = true
-        playImageView.setImageResource(R.drawable.ic_round_pause_24)
+        playImageView.setImageResource(R.drawable.ic_music_player_pause_48)
         setMusicPlayerEnabled(mediaMetadata?.isNotEmpty == true)
         updateMetadataLayout()
         updateSlider()
@@ -102,7 +101,7 @@ class MusicPlayerView @JvmOverloads constructor(
 
     private fun pause() {
         isPlaying = false
-        playImageView.setImageResource(R.drawable.ic_round_play_arrow_24)
+        playImageView.setImageResource(R.drawable.ic_music_player_play_48)
         setMusicPlayerEnabled(mediaMetadata?.isNotEmpty == true)
         updateMetadataLayout()
         updateSlider()
@@ -112,7 +111,7 @@ class MusicPlayerView @JvmOverloads constructor(
 
     private fun stop() {
         isPlaying = false
-        playImageView.setImageResource(R.drawable.ic_round_play_arrow_24)
+        playImageView.setImageResource(R.drawable.ic_music_player_play_48)
         setMusicPlayerEnabled(false)
         updateMetadataLayout()
         updateSlider()
@@ -124,6 +123,11 @@ class MusicPlayerView @JvmOverloads constructor(
         val colorFilter =
             if (isEnabled) ContextCompat.getColor(context, R.color.colorForeground)
             else ContextCompat.getColor(context, R.color.colorForegroundDisabled)
+
+        val playDrawableResId =
+            if (isPlaying) R.drawable.ic_music_player_pause_48
+            else R.drawable.ic_music_player_play_48
+        playImageView.setImageResource(playDrawableResId)
 
         skipToPrevImageView.setColorFilter(colorFilter)
         playImageView.setColorFilter(colorFilter)
@@ -173,17 +177,12 @@ class MusicPlayerView @JvmOverloads constructor(
         val isNotStopped = playbackState?.state != PlaybackStateCompat.STATE_STOPPED
 
         if (duration > 0L && isNotStopped) {
-            currentPositionTextView.text = getMSSFormat(position)
-            remainingPositionTextView.text = getMSSFormat(duration - position)
+            currentPositionTextView.text = position.getMSSFormat()
+            remainingPositionTextView.text = (duration - position).getMSSFormat()
         } else {
             currentPositionTextView.text = context.getString(R.string.default_mss)
             remainingPositionTextView.text = context.getString(R.string.default_mss)
         }
-    }
-
-    private fun getMSSFormat(milliseconds: Long): String {
-        val seconds = floor(milliseconds.toDouble() / 1000).toInt()
-        return "%d:%02d".format(seconds / 60, seconds % 60)
     }
 
     private fun schedulePositionTimer() {
