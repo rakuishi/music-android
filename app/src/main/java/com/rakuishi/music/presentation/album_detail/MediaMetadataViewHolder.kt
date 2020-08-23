@@ -16,6 +16,7 @@ class MediaMetadataViewHolder(parent: ViewGroup) :
 
     fun bind(metadata: MediaMetadataCompat, onClick: ((MediaMetadataCompat) -> Unit)?) {
         itemView.selectableLayout.setOnClickListener { onClick?.invoke(metadata) }
+        itemView.trackNumberTextView.text = metadata.trackNumber.toString()
         itemView.titleTextView.text = metadata.title
         itemView.artistTextView.text = metadata.artist.replaceIfUnknownArtist(itemView.context)
         itemView.durationTextView.text = metadata.duration.getMSSFormat()

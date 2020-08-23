@@ -54,11 +54,11 @@
                 tools:text="ハミダシモノ" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/artistTextView"
+                android:id="@+id/detailTextView"
                 style="@style/TextAppearance.AppCompat.Caption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="楠木ともり" />
+                tools:text="楠木ともり・2020" />
 
         </LinearLayout>
 

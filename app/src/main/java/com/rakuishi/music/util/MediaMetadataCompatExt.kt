@@ -24,6 +24,9 @@ val MediaMetadataCompat.artist: String
 val MediaMetadataCompat.duration: Long
     get() = getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
 
+val MediaMetadataCompat.year: Long
+    get() = getLong(MediaMetadataCompat.METADATA_KEY_YEAR)
+
 val MediaMetadataCompat.trackNumber: Long
     get() = getLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER)
 

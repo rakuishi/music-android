@@ -23,7 +23,10 @@ class AlbumViewHolder(parent: ViewGroup) :
         }
 
         itemView.titleTextView.text = album.title
-        itemView.artistTextView.text = album.artist.replaceIfUnknownArtist(itemView.context)
+        itemView.detailTextView.apply {
+            val artist = album.artist.replaceIfUnknownArtist(itemView.context)
+            text = if (album.year == 0L) artist else "%s・%d".format(artist, album.year)
+        }
         itemView.artworkImageView.apply {
             val bitmap = album.contentUri.loadThumbnail(itemView.context, R.dimen.artwork)
             setImageBitmap(bitmap)

@@ -10,7 +10,8 @@ data class Album(
     val id: Long,
     val title: String,
     val artist: String,
-    val numberOfSongs: Long
+    val numberOfSongs: Long,
+    val year: Long
 ) : Parcelable {
 
     val contentUri: Uri =
@@ -34,6 +35,7 @@ data class Album(
         parcel.writeString(title)
         parcel.writeString(artist)
         parcel.writeLong(numberOfSongs)
+        parcel.writeLong(year)
     }
 
     override fun describeContents(): Int {
@@ -46,6 +48,7 @@ data class Album(
                 parcel.readLong(),
                 parcel.readString()!!,
                 parcel.readString()!!,
+                parcel.readLong(),
                 parcel.readLong()
             )
         }

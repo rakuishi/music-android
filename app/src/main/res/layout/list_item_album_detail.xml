@@ -33,17 +33,19 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/titleTextView"
-                style="@style/TextAppearance.AppCompat.Subhead"
+                style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 tools:text="ハミダシモノ" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/artistTextView"
+                android:id="@+id/detailTextView"
                 style="@style/TextAppearance.AppCompat.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="楠木ともり" />
+                android:layout_marginTop="2dp"
+                tools:text="楠木ともり・2020" />
 
         </LinearLayout>
 

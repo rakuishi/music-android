@@ -55,8 +55,11 @@ class AlbumDetailFragment : Fragment() {
             adapter.submitList(it)
         })
 
-        albumDetailViewModel.actionBarElevation.observe(viewLifecycleOwner, Observer {
-            (requireActivity() as AppCompatActivity).supportActionBar?.elevation = it
+        albumDetailViewModel.actionBarElevation.observe(viewLifecycleOwner, Observer { elevation ->
+            (requireActivity() as AppCompatActivity).supportActionBar?.let { actionBar ->
+                actionBar.elevation = elevation
+                actionBar.title = if (elevation > 0f) args.album.title else ""
+            }
         })
     }
 }

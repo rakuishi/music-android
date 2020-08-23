@@ -10,9 +10,19 @@
     android:padding="16dp"
     tools:ignore="RtlHardcoded">
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/trackNumberTextView"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:minWidth="16dp"
+        tools:text="1" />
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:orientation="vertical">

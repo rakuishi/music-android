@@ -35,13 +35,16 @@ class MusicRepository(private val context: Context) {
             cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST)
         val numberOfSongsColumn: Int =
             cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS)
+        val yearColumn: Int =
+            cursor.getColumnIndex(MediaStore.Audio.Albums.FIRST_YEAR)
 
         do {
             val album = Album(
                 cursor.getLong(idColumn),
                 cursor.getString(titleColumn),
                 cursor.getString(artistColumn),
-                cursor.getLong(numberOfSongsColumn)
+                cursor.getLong(numberOfSongsColumn),
+                cursor.getLong(yearColumn)
             )
             albums.add(album)
 
@@ -75,7 +78,9 @@ class MusicRepository(private val context: Context) {
             cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
         val durationColumn: Int =
             cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)
-        var maxDiscNumber: Long = 1
+        val yearColumn: Int =
+            cursor.getColumnIndex(MediaStore.Audio.Media.YEAR)
+        var maxTrackNumber: Long = 1
 
         do {
             val id = cursor.getLong(idColumn)
@@ -87,6 +92,7 @@ class MusicRepository(private val context: Context) {
             val album = cursor.getString(albumColumn)
             val artist = cursor.getString(artistColumn)
             val duration = cursor.getLong(durationColumn)
+            val year = cursor.getLong(yearColumn)
 
             retriever.setDataSource(context, mediaUri)
 
@@ -95,7 +101,7 @@ class MusicRepository(private val context: Context) {
             val trackNumber =
                 parseNumber(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CD_TRACK_NUMBER))
 
-            maxDiscNumber = max(maxDiscNumber, discNumber)
+            maxTrackNumber = max(maxTrackNumber, trackNumber)
 
             val metadata = MediaMetadataCompat.Builder()
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, id.toString())
@@ -104,6 +110,7 @@ class MusicRepository(private val context: Context) {
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, album)
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
+                .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, year)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DISC_NUMBER, discNumber)
                 .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, trackNumber)
                 .build()
@@ -113,7 +120,7 @@ class MusicRepository(private val context: Context) {
 
         cursor.close()
 
-        val x = 10f.pow(maxDiscNumber.toString().length)
+        val x = 10f.pow(maxTrackNumber.toString().length)
         metadataList.sortWith(Comparator { a, b ->
             (a.discNumber * x + a.trackNumber).toInt() - (b.discNumber * x + b.trackNumber).toInt()
         })

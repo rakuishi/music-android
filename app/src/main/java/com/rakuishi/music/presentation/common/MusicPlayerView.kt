@@ -153,7 +153,13 @@ class MusicPlayerView @JvmOverloads constructor(
             }
             titleTextView.text = mediaMetadata?.title
             albumTextView.text = mediaMetadata?.album
-            artistTextView.text = mediaMetadata?.artist?.replaceIfUnknownArtist(context)
+            detailTextView.apply {
+                val artist = mediaMetadata?.artist?.replaceIfUnknownArtist(context)
+                text = if (mediaMetadata?.year == 0L) artist else "%s・%d".format(
+                    artist,
+                    mediaMetadata?.year
+                )
+            }
         } else {
             metadataLayout.visibility = View.GONE
         }
