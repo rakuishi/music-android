@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.media.MediaMetadataRetriever
 import android.provider.MediaStore
 import android.support.v4.media.MediaMetadataCompat
+import android.util.LruCache
 import com.rakuishi.music.model.Album
 import com.rakuishi.music.util.discNumber
 import com.rakuishi.music.util.trackNumber
@@ -14,6 +15,9 @@ import kotlin.math.max
 import kotlin.math.pow
 
 class MusicRepository(private val context: Context) {
+
+    // Use cache because of taking time to read ContentResolver
+    private val metadataListCache: LruCache<Long, List<MediaMetadataCompat>> = LruCache(50)
 
     fun retrieveAlbums(): List<Album> {
         val resolver: ContentResolver = context.contentResolver
@@ -56,6 +60,10 @@ class MusicRepository(private val context: Context) {
     }
 
     fun retrieveSongs(albumId: Long): List<MediaMetadataCompat> {
+        metadataListCache.get(albumId)?.let {
+            return it
+        }
+
         val resolver: ContentResolver = context.contentResolver
         val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val selection = "%s == %d".format(MediaStore.Audio.Media.ALBUM_ID, albumId)
@@ -125,6 +133,7 @@ class MusicRepository(private val context: Context) {
             (a.discNumber * x + a.trackNumber).toInt() - (b.discNumber * x + b.trackNumber).toInt()
         })
 
+        metadataListCache.put(albumId, metadataList)
         return metadataList
     }
 
