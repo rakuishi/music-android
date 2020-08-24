@@ -82,7 +82,7 @@ class MusicNotificationManager(
 
             addAction(
                 NotificationCompat.Action(
-                    R.drawable.ic_baseline_skip_previous_24,
+                    R.drawable.ic_notification_skip_previous,
                     context.getString(R.string.skip_to_previous),
                     MediaButtonReceiver.buildMediaButtonPendingIntent(
                         context,
@@ -96,7 +96,7 @@ class MusicNotificationManager(
             if (isPlaying) {
                 addAction(
                     NotificationCompat.Action(
-                        R.drawable.ic_baseline_pause_24,
+                        R.drawable.ic_notification_pause,
                         context.getString(R.string.pause),
                         MediaButtonReceiver.buildMediaButtonPendingIntent(
                             context,
@@ -107,7 +107,7 @@ class MusicNotificationManager(
             } else {
                 addAction(
                     NotificationCompat.Action(
-                        R.drawable.ic_baseline_play_arrow_24,
+                        R.drawable.ic_notification_play,
                         context.getString(R.string.play),
                         MediaButtonReceiver.buildMediaButtonPendingIntent(
                             context,
@@ -119,7 +119,7 @@ class MusicNotificationManager(
 
             addAction(
                 NotificationCompat.Action(
-                    R.drawable.ic_baseline_skip_next_24,
+                    R.drawable.ic_notification_skip_next,
                     context.getString(R.string.skip_to_next),
                     MediaButtonReceiver.buildMediaButtonPendingIntent(
                         context,
@@ -131,7 +131,7 @@ class MusicNotificationManager(
             setStyle(
                 androidx.media.app.NotificationCompat.MediaStyle()
                     .setMediaSession(mediaSession.sessionToken)
-                    .setShowActionsInCompactView(1) // play or pause
+                    .setShowActionsInCompactView(0, 1, 2)
                     .setShowCancelButton(true)
                     .setCancelButtonIntent(
                         MediaButtonReceiver.buildMediaButtonPendingIntent(
