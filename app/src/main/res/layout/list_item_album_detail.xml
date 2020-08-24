@@ -60,7 +60,8 @@
         android:layout_marginTop="-28dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        android:src="@drawable/ic_baseline_play_arrow_24" />
+        android:src="@drawable/ic_baseline_play_arrow_24"
+        app:backgroundTint="@color/colorAccent" />
 
     <TextView
         android:id="@+id/numberOfSongsTextView"

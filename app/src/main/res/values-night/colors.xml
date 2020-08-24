@@ -6,7 +6,7 @@
     <color name="colorBackgroundFloating">#424242</color>
     <color name="colorPrimary">#121212</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#80cbc4</color>
+    <color name="colorAccent">#3FD37D</color>
     <color name="colorPrimaryText">#ffffffff</color>
     <color name="colorSecondaryText">#b3ffffff</color>
 </resources>
