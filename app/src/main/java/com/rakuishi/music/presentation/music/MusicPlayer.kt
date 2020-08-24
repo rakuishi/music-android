@@ -74,7 +74,12 @@ class MusicPlayer(private val context: Context) : Player.EventListener {
     }
 
     fun skipToPrevious() {
-        exoPlayer.previous()
+        if (exoPlayer.currentPosition < 5 * 1000) {
+            exoPlayer.previous()
+        } else {
+            exoPlayer.seekTo(0)
+        }
+
         exoPlayer.playWhenReady = true
     }
 
