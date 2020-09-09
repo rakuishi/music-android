@@ -43,8 +43,11 @@ class MusicRepository(private val context: Context) {
             cursor.getColumnIndex(MediaStore.Audio.Albums.FIRST_YEAR)
 
         do {
+            val albumId = cursor.getLong(idColumn)
+            if (!isMusic(albumId)) continue
+
             val album = Album(
-                cursor.getLong(idColumn),
+                albumId,
                 cursor.getString(titleColumn),
                 cursor.getString(artistColumn),
                 cursor.getLong(numberOfSongsColumn),
@@ -57,6 +60,20 @@ class MusicRepository(private val context: Context) {
         cursor.close()
 
         return albums
+    }
+
+    private fun isMusic(albumId: Long): Boolean {
+        val resolver: ContentResolver = context.contentResolver
+        val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        val selection = "%s == %d AND %s != 0".format(
+            MediaStore.Audio.Media.ALBUM_ID,
+            albumId,
+            MediaStore.Audio.Media.IS_MUSIC
+        )
+        val cursor: Cursor? = resolver.query(uri, null, selection, null, null)
+        val isMusic = cursor?.moveToFirst() == true
+        cursor?.close()
+        return isMusic
     }
 
     fun retrieveSongs(albumId: Long): List<MediaMetadataCompat> {
