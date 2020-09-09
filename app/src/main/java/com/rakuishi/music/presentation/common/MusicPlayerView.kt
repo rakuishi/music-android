@@ -13,6 +13,7 @@ import com.rakuishi.music.R
 import com.rakuishi.music.util.*
 import kotlinx.android.synthetic.main.view_music_player.view.*
 import java.util.*
+import kotlin.math.max
 
 class MusicPlayerView @JvmOverloads constructor(
     context: Context,
@@ -170,11 +171,11 @@ class MusicPlayerView @JvmOverloads constructor(
         val isNotStopped = playbackState?.state != PlaybackStateCompat.STATE_STOPPED
 
         if (duration > 0L && duration > position && isNotStopped) {
-            slider.valueTo = (duration / 1000).toFloat()
+            slider.valueTo = max((duration / 1000).toFloat(), 1f)
             slider.value = (position / 1000).toFloat()
         } else {
-            slider.value = 0f
             slider.valueTo = 1f
+            slider.value = 0f
         }
     }
 
