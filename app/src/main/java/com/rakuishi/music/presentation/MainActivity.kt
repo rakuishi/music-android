@@ -3,9 +3,9 @@ package com.rakuishi.music.presentation
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -19,10 +19,6 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-    companion object {
-        const val PERMISSION_REQUEST_CODE = 1000
-    }
 
     private val viewModel: MainViewModel by viewModels()
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -93,25 +89,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestPermission() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-            PERMISSION_REQUEST_CODE
-        )
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == PERMISSION_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            inflateNavigation()
-        } else {
-            Timber.d("onRequestPermissionsResult: failure")
+        val launcher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                inflateNavigation()
+            } else {
+                Timber.d("onRequestPermissionsResult: failure")
+            }
         }
+        launcher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
     // endregion
